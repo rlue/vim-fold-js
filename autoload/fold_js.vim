@@ -13,7 +13,7 @@ function! fold_js#foldtext()
   let s:line = getline(v:foldstart)
   let s:preview_maxwidth = 80 - 1 - (strdisplaywidth(s:stats())) - 2
 
-  let s:preview = s:drop_trailing_characters(s:line)[0:(s:preview_maxwidth - 1)]
+  let s:preview = s:format_method_signature(s:line)[0:(s:preview_maxwidth - 1)]
   let s:preview = substitute(s:preview, '^\( *\)  ', '\1- ', '')
 
   let s:padding = repeat('-', s:preview_maxwidth - strdisplaywidth(s:preview) + 1)
@@ -92,6 +92,12 @@ function! s:stats()
   return '[' . len(l:inner_declaration) . ']'
 endfunction
 
-function! s:drop_trailing_characters(str)
-  return substitute(a:str, '(.*$', '', '')
+function! s:format_method_signature(str)
+  if a:str =~ '(.*)'
+    return substitute(a:str, ')\zs.*$', '', '')
+  elseif a:str =~ '(\s*$'
+    return substitute(a:str, '(\s*$', '(...)', '')
+  else
+    return a:str
+  end
 endfunction
