@@ -46,14 +46,18 @@ function! s:a_declaration_closes_on(lnum)
 
   let l:cursor_bookmark = getcurpos()
   call cursor(a:lnum, 1)
-  normal %F)%
-  let l:body_start =
-        \ matchstr(getline('.'), '\%' . col('.') . 'c.') == '('
-        \   ? getcurpos()[1]
-        \   : 0
+  let l:body_start = searchpair('{', '', '}', 'bW')
+  if getline('.') =~ '(.*).*{'
+    let l:declaration_heading = l:body_start
+  elseif getline('.') =~ ').*{'
+    call cursor(0, 1)
+    let l:declaration_heading = searchpair('(', '', ')', 'bW')
+  else
+    let l:declaration_heading = 0
+  endif
   call setpos('.', l:cursor_bookmark)
 
-  return s:a_declaration_opens_on(l:body_start)
+  return s:a_declaration_opens_on(l:declaration_heading)
 endfunction
 
 function! s:a_body_closes_on(lnum)
