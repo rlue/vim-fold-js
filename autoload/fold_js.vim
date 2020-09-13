@@ -32,7 +32,7 @@ endfunction
 
 function! s:declaration_heading_regex(construct)
   if !exists('s:constructs')
-    let s:constructs = { 'function': '(export (default )=)=function \w*\(',
+    let s:constructs = { 'function': '(export (default )=)=function \w+(\<[^>]+\>)=\(',
           \              'class': '(export (default )=)=class \w+ \{' }
   endif
 
