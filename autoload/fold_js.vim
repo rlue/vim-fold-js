@@ -1,9 +1,9 @@
 " Public Functions =============================================================
 function! fold_js#foldexpr(lnum)
   if s:a_declaration_opens_on(a:lnum)
-    return '>' . (s:indent_level(a:lnum) + 1)
+    return 'a1'
   elseif !s:blank(a:lnum + 1) && s:a_declaration_closes_on(prevnonblank(a:lnum))
-    return '<' . (s:indent_level(prevnonblank(a:lnum)) + 1)
+    return 's1'
   else
     return '='
   endif
@@ -62,20 +62,6 @@ endfunction
 
 function! s:a_body_closes_on(lnum)
   return getline(a:lnum) =~ '^\s*\}$'
-endfunction
-
-function! s:indent_level(lnum)
-  return (match(getline(a:lnum), '\S') / &l:shiftwidth)
-endfunction
-
-function! s:rel_indent(a, b)
-  " Compares indent levels of line numbers a and b.
-  " Returns a number (-1, 0, 1), like Ruby's spaceship operator (<=>).
-  if s:indent_level(a:a) < s:indent_level(a:b)
-    return -1
-  else
-    return s:indent_level(a:a) > s:indent_level(a:b)
-  endif
 endfunction
 
 function! s:blank(lnum)
